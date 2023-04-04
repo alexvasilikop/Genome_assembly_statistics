@@ -132,7 +132,7 @@ def number_of_gaps(list_of_strings):
 
 ##################################################################################################################
 
-if __name__ == '__main__':
+def main():
 
 	#parse assembly file (could be in interleaved format)
 	parser=argparse.ArgumentParser(description="Calculate summarized contiguity statistics from genome assembly fasta file")
@@ -170,3 +170,7 @@ if __name__ == '__main__':
 	print(f"No. of Ns: {N_content}")
 	print(f"Proportion of Ns (assembly): {proportion_N:.5f}")
 	print(f"No. of gaps (assembly): {no_gaps}")
+
+###################################################################################################################################
+if __name__ == '__main__':
+	main()
