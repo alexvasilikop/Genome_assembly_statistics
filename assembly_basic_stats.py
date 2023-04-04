@@ -21,7 +21,7 @@ def get_reverse_lengths(list_of_strings):
 
 	'''Input: list of strings (contigs),
 	   Output: Sorted list of lenghts of contigs in reverse order'''
-	lengths = list(map(lambda contig_sequence: len(contig_sequence.replace("N", "" )), list_of_strings))
+	lengths = list(map(lambda contig_sequence: len(contig_sequence.replace("N", "")), list_of_strings))
 	return list(reversed(sorted(lengths)))
 
 ########################################################################################################
@@ -158,7 +158,7 @@ if __name__ == '__main__':
 	proportion_N = N_content/genome_size
 
 	#Print statistics
-	print(f"Genome/Assembly size: {genome_size_without_N}")
+	print(f"Genome/Assembly size: {genome_size}")
 	print(f"No. of contigs: {len(sequences_of_headers.keys())}")
 	print(f"Max. contig size: {max_length}")
 	print(f"Min. contig size: {min_length}")
