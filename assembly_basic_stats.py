@@ -77,7 +77,7 @@ def N50_L50_N90_L90(list_of_strings):
 	return (N50, L50, N90, L90)
 
 #######################################################################################
-def genome_size(list_of_strings):
+def get_genome_size(list_of_strings):
 
 	#Does not include Ns
 	lengths = get_reverse_lengths(list_of_strings)
@@ -150,11 +150,10 @@ def main():
 	L90 = N50_L50_N90_L90(sequences_of_headers.values())[3]
 	max_length = longest_contig(sequences_of_headers.values())
 	min_length = shortest_contig(sequences_of_headers.values())
-	genome_size = genome_size(sequences_of_headers.values())
+	genome_size = get_genome_size(sequences_of_headers.values())
 	gc_content = GC_proportion_of_genome(sequences_of_headers.values())
 	N_content = number_of_N(sequences_of_headers.values())
 	no_gaps = number_of_gaps(sequences_of_headers.values())
-	genome_size_without_N = genome_size-N_content
 	proportion_N = N_content/genome_size
 
 	#Print statistics
