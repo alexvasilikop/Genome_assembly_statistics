@@ -79,7 +79,7 @@ def N50_L50_N90_L90(list_of_strings):
 #######################################################################################
 def genome_size(list_of_strings):
 
-	#includes Ns
+	#Does not include Ns
 	lengths = get_reverse_lengths(list_of_strings)
 	return sum(lengths)
 
