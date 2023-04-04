@@ -6,7 +6,6 @@ from collections import defaultdict
 import argparse
 
 #########################################################################################################
-
 def read_fasta_as_dict(filename):
 
 	#read dictionary of contig names and sequences
@@ -26,7 +25,6 @@ def get_reverse_lengths(list_of_strings):
 	return list(reversed(sorted(lengths)))
 
 ########################################################################################################
-
 def longest_contig(list_of_strings):
 
 	'''Returns the longest contig encountered in the assembly so far
@@ -36,7 +34,6 @@ def longest_contig(list_of_strings):
 	return lengths[0]
 
 ###########################################################################
-
 def shortest_contig(list_of_strings):
 
 	'''Returns the longest contig encountered in the assembly so far
@@ -46,7 +43,6 @@ def shortest_contig(list_of_strings):
 	return lengths[-1]
 
 #################################################################################################
-
 def N50_L50_N90_L90(list_of_strings):
 
 	'''Returns N50 and L50 as a tuple
@@ -81,7 +77,6 @@ def N50_L50_N90_L90(list_of_strings):
 	return (N50, L50, N90, L90)
 
 #######################################################################################
-
 def genome_size(list_of_strings):
 
 	#includes Ns
@@ -89,7 +84,6 @@ def genome_size(list_of_strings):
 	return sum(lengths)
 
 ############################################################################################
-
 def GC_proportion_of_genome(list_of_strings):
 	
 	'''Input: List of strings-contigs
@@ -105,7 +99,6 @@ def GC_proportion_of_genome(list_of_strings):
 	return gc_count/bases_count
 
 ###################################################################################
-
 def number_of_N(list_of_strings):
 
 	'''Return total number of Ns and average N per contig
@@ -118,7 +111,6 @@ def number_of_N(list_of_strings):
 
 	return N_count
 ######################################################################################################
-
 def number_of_gaps(list_of_strings):
 	'''
 	Any string of Ns >=1 is considered as a gap
@@ -166,7 +158,7 @@ if __name__ == '__main__':
 	proportion_N = N_content/genome_size
 
 	#Print statistics
-	print(f"Genome/Assembly size: {genome_size}")
+	print(f"Genome/Assembly size: {genome_size_without_N}")
 	print(f"No. of contigs: {len(sequences_of_headers.keys())}")
 	print(f"Max. contig size: {max_length}")
 	print(f"Min. contig size: {min_length}")
