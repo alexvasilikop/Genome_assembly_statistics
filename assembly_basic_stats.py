@@ -86,7 +86,7 @@ def get_genome_size(list_of_strings):
 def GC_proportion_of_genome(list_of_strings):
 	
 	'''Input: List of strings-contigs
-	   returns the GC proportion of the genome ignoring Ns in the calculation'''
+	   returns the GC proportion of the genome ignoring Ns in the calculation (Ns excluded)'''
 
 	bases_count = 0
 	gc_count    = 0
@@ -97,44 +97,35 @@ def GC_proportion_of_genome(list_of_strings):
 
 	return gc_count/bases_count
 
-###################################################################################
-def number_of_N(list_of_strings):
-
-	'''Return total number of Ns and average N per contig
-	   Input: List of sequences'''
-
-	N_count = 0
-
-	for c in list_of_strings:
-		N_count += c.count("N")
-
-	return N_count
 ######################################################################################################
-def number_of_gaps(list_of_strings):
-	'''
-	Any string of Ns >=1 is considered as a gap
-	'''
-	gap_found = 0
-	no_gaps   = 0
+def number_of_gaps_and_Ns(list_of_strings):
+
+	#Any string of Ns >=3 is considered as a gap
+	N_count_total = 0
+	N_in_row      = 0
+	no_gaps       = 0
 
 	for contig in list_of_strings:
 
 		for nucl in contig:
 			if nucl == "N":
-				gap_found +=1
+				N_count_total+=1
+				N_in_row+=1
 
-			elif gap_found > 0 and nucl != "N":
-				no_gaps +=1
-				gap_found = 0
+				if N_in_row == 3:
+					no_gaps +=1
 
-	return (no_gaps)
+			elif N_in_row > 0 and nucl != "N":
+				N_in_row = 0
+
+	return (no_gaps, N_count_total)
 
 ##################################################################################################################
 
 def main():
 
 	#parse assembly file (could be in interleaved format)
-	parser=argparse.ArgumentParser(description="Calculate summarized contiguity statistics from genome assembly fasta file")
+	parser=argparse.ArgumentParser(description="Calculate summarized contiguity statistics from genome assembly in fasta format")
 	parser.add_argument("input_fasta", help="Genome assembly file in fasta format")
 	args=parser.parse_args()
 	filename = args.input_fasta
@@ -142,32 +133,35 @@ def main():
 	#read by line
 	sequences_of_headers = read_fasta_as_dict(filename)
 
-	#Return statistics
-	N50 = N50_L50_N90_L90(sequences_of_headers.values())[0]
-	L50 = N50_L50_N90_L90(sequences_of_headers.values())[1]
-	N90 = N50_L50_N90_L90(sequences_of_headers.values())[2]
-	L90 = N50_L50_N90_L90(sequences_of_headers.values())[3]
+	#Return length statistics (Ns are ignored)
+	N50, L50, N90, L90 = N50_L50_N90_L90(sequences_of_headers.values())
 	max_length = longest_contig(sequences_of_headers.values())
 	min_length = shortest_contig(sequences_of_headers.values())
+	
+	#genome size without Ns
 	genome_size = get_genome_size(sequences_of_headers.values())
 	gc_content = GC_proportion_of_genome(sequences_of_headers.values())
-	N_content = number_of_N(sequences_of_headers.values())
-	no_gaps = number_of_gaps(sequences_of_headers.values())
-	proportion_N = N_content/genome_size
+	
+	#return gaps and Ns (>=3 Ns in row are counted as gaps)
+	no_gaps,N_content = number_of_gaps_and_Ns(sequences_of_headers.values())
+
+	#proportion of Ns is total Ns divided by total genome size
+	proportion_N = N_content/(genome_size+N_content)
 
 	#Print statistics
-	print(f"Genome/Assembly size: {genome_size}")
+	print(f"Genome assembly size: {genome_size}")
+	print(f"Genome assembly size including Ns: {genome_size+N_content}")
 	print(f"No. of contigs: {len(sequences_of_headers.keys())}")
-	print(f"Max. contig size: {max_length}")
-	print(f"Min. contig size: {min_length}")
+	print(f"Max. contig length (bp): {max_length}")
+	print(f"Min. contig size (bp): {min_length}")
 	print(f"GC content: {gc_content:.3f}")
 	print(f"N50: {N50}")
 	print(f"L50: {L50}")
 	print(f"N90: {N90}")
 	print(f"L90: {L90}")
 	print(f"No. of Ns: {N_content}")
-	print(f"Proportion of Ns (assembly): {proportion_N:.5f}")
-	print(f"No. of gaps (assembly): {no_gaps}")
+	print(f"Proportion of Ns (genome assembly): {proportion_N:.5f}")
+	print(f"No. of gaps (genome assembly): {no_gaps}")
 
 ###################################################################################################################################
 if __name__ == '__main__':
